@@ -1,65 +1,91 @@
-import Image from "next/image";
+import { Hero } from "@/components/features/hero"
+import { Categories } from "@/components/features/categories"
+import { ProductCard } from "@/components/features/product-card"
+import { getProducts } from "@/app/actions"
+import Link from "next/link"
+import { Button } from "@/components/ui/button"
+import { ArrowRight } from "lucide-react"
 
-export default function Home() {
+export default async function Home() {
+  // Fetch featured products (limit 4 for now)
+  const products = await getProducts()
+  const featuredProducts = products.slice(0, 4)
+
   return (
-    <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex min-h-screen w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
+    <main className="flex flex-col min-h-screen">
+      <Hero />
+      <Categories />
+
+      {/* Featured Products Section */}
+      <section className="py-16 md:py-24 bg-gray-50">
+        <div className="container-custom">
+          <div className="flex items-end justify-between mb-12">
+            <div>
+              <h2 className="text-3xl font-bold text-river-blue mb-2">Today&apos;s Fresh Catch</h2>
+              <p className="text-gray-500">Handpicked premium quality fish</p>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
+            {featuredProducts.length > 0 ? (
+              featuredProducts.map(product => (
+                <ProductCard key={product.id} product={product} />
+              ))
+            ) : (
+              <div className="col-span-full text-center py-10 text-gray-500">
+                Loading fresh catch...
+              </div>
+            )}
+          </div>
+
+          <div className="mt-12 text-center">
+            <Link href="/shop">
+              <Button size="lg" className="h-12 px-8">
+                View All Products <ArrowRight className="ml-2 h-4 w-4" />
+              </Button>
+            </Link>
+          </div>
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
+      </section>
+
+      {/* Trust/Story Section */}
+      <section className="py-20 bg-river-blue text-white relative overflow-hidden">
+        <div className="container-custom relative z-10 grid md:grid-cols-2 gap-12 items-center">
+          <div>
+            <h2 className="text-3xl md:text-5xl font-bold mb-6 font-bengali">বিশ্বাসের সাথে মাছ কিনুন</h2>
+            <h3 className="text-xl md:text-2xl font-semibold mb-6 text-mustard-gold">22 Years of Trust & Quality</h3>
+            <p className="text-gray-300 mb-6 leading-relaxed">
+              Ma Tara Fish Center is not just a shop, it&apos;s a legacy in Haldia. Started two decades ago with a small stall, we now serve hundreds of families daily. We source directly from the ghats at 3 AM to ensure that what goes on your plate is as fresh as it gets.
+            </p>
+            <ul className="space-y-4 mb-8">
+              <li className="flex items-center gap-3">
+                <span className="h-8 w-8 rounded-full bg-white/10 flex items-center justify-center text-mustard-gold">❄️</span>
+                <span>Chemical-free Scaling & Cleaning</span>
+              </li>
+              <li className="flex items-center gap-3">
+                <span className="h-8 w-8 rounded-full bg-white/10 flex items-center justify-center text-mustard-gold">🚚</span>
+                <span>Home Delivery in Haldia (Selected Pincodes)</span>
+              </li>
+              <li className="flex items-center gap-3">
+                <span className="h-8 w-8 rounded-full bg-white/10 flex items-center justify-center text-mustard-gold">⚖️</span>
+                <span>Honest Weighing, Right Price</span>
+              </li>
+            </ul>
+            <Link href="/about">
+              <Button variant="outline" className="text-white border-white/30 hover:bg-white/10">Read Our Story</Button>
+            </Link>
+          </div>
+          <div className="relative h-96 rounded-2xl overflow-hidden shadow-2xl bg-gray-800">
+            {/* Placeholder for Owner/shop image */}
+            <div className="absolute inset-0 flex items-center justify-center bg-gray-700 text-gray-500">
+              <span className="text-center p-4">
+                [Image: Owner cutting fish or clean shop view] <br />
+                (Will generate later)
+              </span>
+            </div>
+          </div>
         </div>
-      </main>
-    </div>
-  );
+      </section>
+    </main>
+  )
 }
